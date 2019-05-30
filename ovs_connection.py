@@ -13,6 +13,7 @@ class OVSConnection():
 
     def __enter__(self):
         self.connect()
+        return self
 
     def __exit__(self, exec_type, exec_value, traceback):
         self.disconnect()
@@ -42,9 +43,6 @@ def main():
         'params': ['Test'],
         'id': 0
     }
-    conn = OVSConnection()
-    conn.connect()
-    conn.send(json.dumps(echo_msg))
-    print(conn.receive())
-    conn.disconnect()
-
+    with OVSConnection() as conn:
+        conn.send(json.dumps(echo_msg))
+        print(conn.receive())

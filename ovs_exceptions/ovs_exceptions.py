@@ -1,0 +1,2 @@
+class OVSException(Exception):
+    pass
