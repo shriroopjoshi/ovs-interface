@@ -1,6 +1,6 @@
-""" OVSDB Models """
+""" Bridge Model """
 import json
-import interface
+import uuid
 
 class Bridge(object):
 
@@ -13,27 +13,27 @@ class Bridge(object):
             other_config=dict(), ports=list(), protocols=list(), rstp_enabled=False,
             rstp_status=dict(), sflow=list(), status=dict(), stp_enable=True
         ):
-        self.__auto_attach = set(auto_attach)
-        self.__controller = set(controller)
-        self.__datapath_id = datapath_id
-        self.__datapath_type = datapath_type
-        self.__datapath_version = tuple(datapath_version.split('.'))
-        self.__external_ids = external_ids
-        self.__fail_mode = set(fail_mode)
-        self.__flood_vlans = set(flood_vlans)
-        self.__ipfix = set(ipfix)
-        self.__mcast_snooping_enable = mcast_snooping_enable
-        self.__mirrors = set(mirrors)
-        self.__name = name
-        self.__netflow = set(netflow)
-        self.__other_config = other_config
-        self.__ports = set(ports)
-        self.__protocols = set(protocols)
-        self.__rstp_enabled = rstp_enabled
-        self.__rstp_status = rstp_status
-        self.__sflow = set(sflow)
-        self.__status = status
-        self.__stp_enable = stp_enable
+        self.auto_attach = set(auto_attach)
+        self.controller = set(controller)
+        self.datapath_id = datapath_id
+        self.datapath_type = datapath_type
+        self.datapath_version = tuple(datapath_version.split('.'))
+        self.external_ids = dict(external_ids)
+        self.fail_mode = set(fail_mode)
+        self.flood_vlans = set(flood_vlans)
+        self.ipfix = set(ipfix)
+        self.mcast_snooping_enable = mcast_snooping_enable
+        self.mirrors = set(mirrors)
+        self.name = name
+        self.netflow = set(netflow)
+        self.other_config = dict(other_config)
+        self.ports = set(ports)
+        self.protocols = set(protocols)
+        self.rstp_enabled = rstp_enabled
+        self.rstp_status = dict(rstp_status)
+        self.sflow = set(sflow)
+        self.status = dict(status)
+        self.stp_enable = stp_enable
 
     @property
     def auto_attach(self):
@@ -81,11 +81,10 @@ class Bridge(object):
 
     @datapath_version.setter
     def datapath_version(self, value):
-        if (not isinstance(value, str)):
-            raise ValueError('datapath_verion can only be a string')
-        if (len(value.split('.')) != 3):
-            raise ValueError('datapath_verion should be of the format x.x.x')
-        self.__datapath_version = tuple(value.split('.'))
+        if (not isinstance(value, (str, tuple))):
+            raise ValueError('datapath_verion can only be a string or tuple')
+        self.__datapath_version = tuple(value) if isinstance(value, tuple) \
+            else tuple(value.split('.'))
 
     @property
     def external_ids(self):
@@ -151,6 +150,12 @@ class Bridge(object):
     def name(self):
         return self.__name
 
+    @name.setter
+    def name(self, value):
+        if (not isinstance(value, str)):
+            raise ValueError('name can only be a string')
+        self.__name = str(value)
+
     @property
     def netflow(self):
         return self.__netflow
@@ -180,9 +185,9 @@ class Bridge(object):
         if (not isinstance(value, (list, set))):
             raise ValueError('ports can only be a list or a set')
         for val in value:
-            if (not isinstance(val, interface.Interface)):
-                raise ValueError('ports need to a instances of Interface class')
-        self.__ports = set(value)
+            if (not isinstance(val, (str, uuid.UUID))):
+                raise ValueError('port need to a instances of str')
+        self.__ports = set([uuid.UUID(str(val)) for val in value])
 
     @property
     def protocols(self):
@@ -242,7 +247,7 @@ class Bridge(object):
     def stp_enable(self, value):
         if (not isinstance(value, bool)):
             raise ValueError('status can only be a boolean')
-        self.__status = value
+        self.__stp_enable = value
 
     def __str__(self):
         return json.dumps({

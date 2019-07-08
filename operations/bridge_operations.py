@@ -7,8 +7,6 @@ import ovs_exceptions.ovs_exceptions
 
 class BridgeOperations(object):
 
-    table_name = 'Bridge'
-
     @staticmethod
     def get_bridge(bridge_name):
         request = {
@@ -17,13 +15,13 @@ class BridgeOperations(object):
                 constants.OVSDB_NAME,
                 {
                     'op': constants.Operations.select.value,
-                    'table': BridgeOperations.table_name,
+                    'table': constants.OVSDBTables.bridge.value,
                     'where': [
                         ['name', '==', str(bridge_name)]
                     ]
                 }
             ],
-            'id': 0
+            'id': ovs_connection.TransactionID.id()
         }
         response = None
         request = json.dumps(request)

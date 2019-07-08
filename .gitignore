@@ -1,0 +1,6 @@
+# Executables
+*.pyc
+*.pyo
+
+# IDE dirs
+.vscode/*

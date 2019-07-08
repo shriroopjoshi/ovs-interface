@@ -5,7 +5,7 @@ import json
 
 class OVSConnection():
 
-    HOST = '/var/run/openvswitch/db.sock'
+    HOST = '/usr/local/var/run/openvswitch/db.sock'
     BUFF_SIZE = 1024
 
     def __init__(self):
@@ -36,6 +36,16 @@ class OVSConnection():
 
     def disconnect(self):
         self.connection_sock.close()
+
+class TransactionID():
+
+    __NUMBER_OF_CONCURRENT_TRANSACTIONS = 128
+    __counter = 0
+
+    @classmethod
+    def id(cls):
+        cls.__counter += 1
+        return cls.__counter % cls.__NUMBER_OF_CONCURRENT_TRANSACTIONS
 
 def main():
     echo_msg = {
