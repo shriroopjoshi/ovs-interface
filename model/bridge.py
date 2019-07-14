@@ -11,7 +11,7 @@ class Bridge(object):
             datapath_version='..', external_ids=dict(), fail_mode=list(), flood_vlans=list(),
             ipfix=list(), mcast_snooping_enable=False, mirrors=list(), netflow=list(),
             other_config=dict(), ports=list(), protocols=list(), rstp_enabled=False,
-            rstp_status=dict(), sflow=list(), status=dict(), stp_enable=True
+            rstp_status=dict(), sflow=list(), status=dict(), stp_enable=True, uuid=''
         ):
         self.auto_attach = set(auto_attach)
         self.controller = set(controller)
@@ -34,6 +34,7 @@ class Bridge(object):
         self.sflow = set(sflow)
         self.status = dict(status)
         self.stp_enable = stp_enable
+        self.uuid = uuid
 
     @property
     def auto_attach(self):
@@ -249,25 +250,36 @@ class Bridge(object):
             raise ValueError('status can only be a boolean')
         self.__stp_enable = value
 
+    @property
+    def uuid(self):
+        return self.__uuid
+
+    @uuid.setter
+    def uuid(self, value):
+        if (not isinstance(value, (uuid.UUID, str))):
+            raise ValueError('uuid can only be str or uuid.UUID')
+        self.__uuid = uuid.UUID(value)
+
     def __str__(self):
         return json.dumps({
-            'auto_attach': str(self.__auto_attach),
-            'controller': str(self.__controller),
-            'datapath_id': str(self.__datapath_id),
-            'datapath_version': str(self.__datapath_version),
-            'external_ids': str(self.__external_ids),
-            'fail_mode': str(self.__fail_mode),
-            'flood_vlans': str(self.__flood_vlans),
-            'ipfix': str(self.__ipfix),
-            'mcast_snooping_enable': str(self.__mcast_snooping_enable),
-            'mirrors': str(self.__mirrors),
-            'name': str(self.__name),
-            'netflow': str(self.__netflow),
-            'other_config': str(self.__other_config),
-            'ports': str(self.__ports),
-            'protocols': str(self.__protocols),
-            'rstp_enabled': str(self.__rstp_enabled),
-            'sflow': str(self.__sflow),
-            'status': str(self.__status),
-            'stp_enable': str(self.__stp_enable)
+            'auto_attach': list(self.auto_attach),
+            'controller': list(self.controller),
+            'datapath_id': self.datapath_id,
+            'datapath_type': self.datapath_type,
+            'datapath_version': list(self.datapath_version),
+            'external_ids': self.external_ids,
+            'fail_mode': list(self.fail_mode),
+            'flood_vlans': list(self.flood_vlans),
+            'ipfix': list(self.ipfix),
+            'mcast_snooping_enable': self.mcast_snooping_enable,
+            'mirrors': list(self.mirrors),
+            'name': self.name,
+            'netflow': list(self.netflow),
+            'other_config': self.other_config,
+            'ports': [str(port) for port in self.ports],
+            'protocols': list(self.protocols),
+            'rstp_enabled': self.rstp_enabled,
+            'sflow': list(self.sflow),
+            'status': self.status,
+            'stp_enable': self.stp_enable
         })
