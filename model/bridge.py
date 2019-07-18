@@ -95,7 +95,7 @@ class Bridge(object):
     def external_ids(self, value):
         if (not isinstance(value, dict)):
             raise ValueError('external_ids can only be a dict')
-        self.__external_ids = value
+        self.__external_ids = dict(value)
 
     @property
     def fail_mode(self):
@@ -175,7 +175,7 @@ class Bridge(object):
     def other_config(self, value):
         if (not isinstance(value, dict)):
             raise ValueError('other_config can only be a dict')
-        self.__other_config = value
+        self.__other_config = dict(value)
 
     @property
     def ports(self):
@@ -281,5 +281,6 @@ class Bridge(object):
             'rstp_enabled': self.rstp_enabled,
             'sflow': list(self.sflow),
             'status': self.status,
-            'stp_enable': self.stp_enable
+            'stp_enable': self.stp_enable,
+            'uuid': str(self.uuid)
         })
