@@ -4,8 +4,6 @@ import uuid
 
 class Bridge(object):
 
-    DPDK_DATAPATH_TYPE = 'netdev'
-
     def __init__(
             self, name, auto_attach=list(), controller=list(), datapath_id='', datapath_type='',
             datapath_version='..', external_ids=dict(), fail_mode=list(), flood_vlans=list(),

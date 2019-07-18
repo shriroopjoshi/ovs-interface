@@ -1,60 +1,43 @@
 import json
 
 import constants
-import model.port
-import ovs_connection
-import ovs_exceptions.ovs_exceptions
+from model.port import Port
+from operations.ovs_operations import OVSOperations
 
-class PortOperations(object):
+class PortOperations(OVSOperations):
 
     @staticmethod
     def get_ports(*conditions):
-        request = {
-            'method': constants.Method.transact.value,
-            'params': [
-                constants.OVSDB_NAME,
-                {
-                    'op': constants.Operations.select.value,
-                    'table': constants.OVSDBTables.port.value,
-                    'where': [condition for condition in conditions]
-                }
-            ],
-            'id': ovs_connection.TransactionID.id()
-        }
-        response = None
-        with ovs_connection.OVSConnection() as conn:
-            conn.send(json.dumps(request))
-            response = json.loads(conn.receive())
-        if response['error']:
-            raise ovs_exceptions.ovs_exceptions.OVSException(response['error'].strip())
-        response_rows = response['result'][0]['rows']
         ports = list()
-        for response_row in response_rows:
-            ports.append(model.port.Port(
-                response_row['name'],
-                bond_active_slave=response_row['bond_active_slave'][1],
-                bond_downdelay=response_row['bond_downdelay'],
-                bond_fake_iface=response_row['bond_fake_iface'],
-                bond_mode=response_row['bond_mode'][1],
-                bond_updelay=response_row['bond_updelay'],
-                cvlans=response_row['cvlans'][1],
-                external_ids={key: value for key, value in response_row['external_ids'][1]},
-                fake_bridge=response_row['fake_bridge'],
-                interfaces=[intf for _, intf in response_row['interfaces'][1]] if(
-                    response_row['interfaces'][0] == 'set') else [response_row['interfaces'][1]],
-                lacp=response_row['lacp'][1],
-                mac=response_row['mac'][1],
-                other_config={key: value for key, value in response_row['other_config'][1]},
-                protected=response_row['protected'],
-                qos=response_row['qos'][1],
-                rstp_statistics={key: value for key, value in response_row['rstp_statistics'][1]},
-                rstp_status={key: value for key, value in response_row['rstp_status'][1]},
-                statistics={key: value for key, value in response_row['statistics'][1]},
-                status={key: value for key, value in response_row['status'][1]},
-                tag=response_row['tag'][1],
-                trunks=response_row['trunks'][1],
-                vlan_mode=response_row['vlan_mode'][1],
-                uuid=response_row['_uuid'][1]
+        response = super(PortOperations, PortOperations).get(
+            constants.Operations.select.value, constants.OVSDBTables.port.value, *conditions
+        )
+        for record in response:
+            ports.append(Port(
+                record['name'],
+                bond_active_slave=record['bond_active_slave'][1],
+                bond_downdelay=record['bond_downdelay'],
+                bond_fake_iface=record['bond_fake_iface'],
+                bond_mode=record['bond_mode'][1],
+                bond_updelay=record['bond_updelay'],
+                cvlans=record['cvlans'][1],
+                external_ids={key: value for key, value in record['external_ids'][1]},
+                fake_bridge=record['fake_bridge'],
+                interfaces=[intf for _, intf in record['interfaces'][1]] if(
+                    record['interfaces'][0] == 'set') else [record['interfaces'][1]],
+                lacp=record['lacp'][1],
+                mac=record['mac'][1],
+                other_config={key: value for key, value in record['other_config'][1]},
+                protected=record['protected'],
+                qos=record['qos'][1],
+                rstp_statistics={key: value for key, value in record['rstp_statistics'][1]},
+                rstp_status={key: value for key, value in record['rstp_status'][1]},
+                statistics={key: value for key, value in record['statistics'][1]},
+                status={key: value for key, value in record['status'][1]},
+                tag=record['tag'][1],
+                trunks=record['trunks'][1],
+                vlan_mode=record['vlan_mode'][1],
+                uuid=record['_uuid'][1]
             ))
         return ports
 

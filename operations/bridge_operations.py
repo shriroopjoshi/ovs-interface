@@ -1,59 +1,42 @@
 import json
 
 import constants
-import model.bridge
-import ovs_connection
-import ovs_exceptions.ovs_exceptions
+from model.bridge import Bridge
+from operations.ovs_operations import OVSOperations
 
-class BridgeOperations(object):
+class BridgeOperations(OVSOperations):
 
     @staticmethod
     def get_bridges(*conditions):
-        request = {
-            'method': constants.Method.transact.value,
-            'params': [
-                constants.OVSDB_NAME,
-                {
-                    'op': constants.Operations.select.value,
-                    'table': constants.OVSDBTables.bridge.value,
-                    'where': [condition for condition in conditions]
-                }
-            ],
-            'id': ovs_connection.TransactionID.id()
-        }
-        response = None
-        with ovs_connection.OVSConnection() as conn:
-            conn.send(json.dumps(request))
-            response = json.loads(conn.receive())
-        if response['error']:
-            raise ovs_exceptions.ovs_exceptions.OVSException(response['error'].strip())
-        response_rows = response['result'][0]['rows']
         bridges = list()
-        for response_row in response_rows:
-            bridges.append(model.bridge.Bridge(
-                response_row['name'],
-                auto_attach=response_row['auto_attach'][1],
-                controller=response_row['controller'][1],
-                datapath_id=response_row['datapath_id'],
-                datapath_type=response_row['datapath_type'],
-                datapath_version=response_row['datapath_version'],
-                external_ids={key: value for key, value in response_row['external_ids'][1]},
-                fail_mode=response_row['fail_mode'][1],
-                flood_vlans=response_row['flood_vlans'][1],
-                ipfix=response_row['ipfix'][1],
-                mcast_snooping_enable=response_row['mcast_snooping_enable'],
-                mirrors=response_row['mirrors'][1],
-                netflow=response_row['netflow'][1],
-                other_config={key: value for key, value in response_row['other_config'][1]},
-                ports=[port for _, port in response_row['ports'][1]] if (
-                    response_row['ports'][0] == 'set') else [response_row['ports'][1]],
-                protocols=response_row['protocols'][1],
-                rstp_enabled=response_row['rstp_enable'],
-                rstp_status={key: value for key, value in response_row['rstp_status'][1]},
-                sflow=response_row['sflow'][1],
-                status={key: value for key, value in response_row['status'][1]},
-                stp_enable=response_row['stp_enable'],
-                uuid=response_row['_uuid'][1]
+        response = super(BridgeOperations, BridgeOperations).get(
+            constants.Operations.select.value, constants.OVSDBTables.bridge.value, *conditions
+        )
+        for record in response:
+            bridges.append(Bridge(
+                record['name'],
+                auto_attach=record['auto_attach'][1],
+                controller=record['controller'][1],
+                datapath_id=record['datapath_id'],
+                datapath_type=record['datapath_type'],
+                datapath_version=record['datapath_version'],
+                external_ids={key: value for key, value in record['external_ids'][1]},
+                fail_mode=record['fail_mode'][1],
+                flood_vlans=record['flood_vlans'][1],
+                ipfix=record['ipfix'][1],
+                mcast_snooping_enable=record['mcast_snooping_enable'],
+                mirrors=record['mirrors'][1],
+                netflow=record['netflow'][1],
+                other_config={key: value for key, value in record['other_config'][1]},
+                ports=[port for _, port in record['ports'][1]] if (
+                    record['ports'][0] == 'set') else [record['ports'][1]],
+                protocols=record['protocols'][1],
+                rstp_enabled=record['rstp_enable'],
+                rstp_status={key: value for key, value in record['rstp_status'][1]},
+                sflow=record['sflow'][1],
+                status={key: value for key, value in record['status'][1]},
+                stp_enable=record['stp_enable'],
+                uuid=record['_uuid'][1]
             ))
         return bridges
 
