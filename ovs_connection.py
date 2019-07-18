@@ -1,7 +1,9 @@
 from __future__ import print_function
 
-import socket
 import json
+import socket
+
+import constants
 
 class OVSConnection():
 
@@ -46,6 +48,35 @@ class TransactionID():
     def id(cls):
         cls.__counter += 1
         return cls.__counter % cls.__NUMBER_OF_CONCURRENT_TRANSACTIONS
+
+class TransactionHandle(object):
+
+    def __init__(self):
+        self.__transaction_id = TransactionID.id()
+        self.__request_payload = {
+            'id': self.transaction_id,
+            'method': constants.Method.transact.value,
+            'params': [constants.OVSDB_NAME]
+        }
+        self.__response = dict()
+
+    @property
+    def transaction_id(self):
+        return self.__transaction_id
+
+    @property
+    def response(self):
+        return self.__response
+
+    def add_request(self, request):
+        self.__request_payload['params'].append(request)
+
+    def apply_transaction(self):
+        with OVSConnection() as connection:
+            connection.send(json.dumps(self.__request_payload))
+            self.__response = json.loads(connection.receive())
+            #TODO Make sure ID is same in request and response
+        
 
 def main():
     echo_msg = {

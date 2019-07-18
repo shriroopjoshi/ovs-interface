@@ -59,8 +59,10 @@ class BridgeOperations(object):
 
     @staticmethod
     def get_bridge_by_name(name):
-        return BridgeOperations.get_bridges(['name', '==', str(name)])[0]
+        bridges = BridgeOperations.get_bridges(['name', '==', str(name)])
+        return bridges[0] if bridges else None
 
     @staticmethod
     def get_bridge_by_uuid(uuid):
-        return BridgeOperations.get_bridges(['_uuid', '==', ['uuid', str(uuid)]])[0]
+        bridges = BridgeOperations.get_bridges(['_uuid', '==', ['uuid', str(uuid)]])
+        return bridges[0] if bridges else None
