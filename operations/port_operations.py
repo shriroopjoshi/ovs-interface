@@ -50,3 +50,38 @@ class PortOperations(OVSOperations):
     def get_port_by_uuid(uuid):
         ports = PortOperations.get_ports(['_uuid', '==', ['uuid', str(uuid)]])
         return ports[0] if ports else None
+
+    @staticmethod
+    def update_port(port, *conditions):
+        record = {
+            'bond_active_slave': ['set', [_ for _ in port.bond_active_slave]],
+            'bond_downdelay': port.bond_downdelay,
+            'bond_fake_iface': port.bond_fake_iface,
+            'bond_mode': ['set', [_ for _ in port.bond_mode]],
+            'cvlans': ['set', [_ for _ in port.cvlans]],
+            'external_ids': ['map', [[_, port.external_ids[_]] for _ in port.external_ids]],
+            'fake_bridge': port.fake_bridge,
+            'interfaces': ['set', [['uuid', str(_)] for _ in port.interfaces]],
+            'lacp': ['set', [_ for _ in port.lacp]],
+            'mac': ['set', [_ for _ in port.mac]],
+            'other_config': ['map', [[_, port.other_config[_]] for _ in port.other_config]],
+            'protected': port.protected,
+            'qos': ['set', [_ for _ in port.qos]],
+            'rstp_statistics': ['map', [[_, port.rstp_statistics[_]] for _ in port.rstp_statistics]],
+            'statistics': ['map', [[_, port.statistics[_]] for _ in port.statistics]],
+            'status': ['map', [[_, port.status[_]] for _ in port.status]],
+            'tag': ['set', [_ for _ in port.tag]],
+            'trunks': ['set', [_ for _ in port.trunks]],
+            'vlan_mode': ['set', [_ for _ in port.vlan_mode]]
+        }
+        return super(PortOperations, PortOperations).update(
+            constants.OVSDBTables.port.value, record, *conditions
+        )
+
+    @staticmethod
+    def update_port_by_name(name, port):
+        return PortOperations.update_port(port, ['name', '==', str(name)])
+
+    @staticmethod
+    def update_port_by_uuid(uuid, port):
+        return PortOperations.update_port(port, ['_uuid', '==', ['uuid', str(uuid)]])

@@ -24,8 +24,8 @@ def get_bridges_by_uuid():
 def update_external_ids(name, key, value):
     bridge = BridgeOperations.get_bridge_by_name(name)
     if not bridge:
-            print('No such bridge')
-            return
+        print('No such bridge')
+        return
 
     bridge.external_ids[key] = value
     rows = BridgeOperations.update_bridge_by_name(bridge.name, bridge)
@@ -33,7 +33,7 @@ def update_external_ids(name, key, value):
 
     bridge = BridgeOperations.get_bridge_by_name(name)
     bridge.external_ids.pop(key)
-    BridgeOperations.update_bridge_by_uuid(bridge.uuid, bridge)
+    rows = BridgeOperations.update_bridge_by_uuid(bridge.uuid, bridge)
     print('Rows updated = %s' % rows)
 
     bridge = BridgeOperations.get_bridge_by_name(name)

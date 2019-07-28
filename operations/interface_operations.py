@@ -60,3 +60,55 @@ class InterfaceOperations(OVSOperations):
     def get_interfaces_by_uuid(uuid):
         interfaces = InterfaceOperations.get_interfaces(['_uuid', '==', ['uuid', str(uuid)]])
         return interfaces[0] if interfaces else None
+
+    @staticmethod
+    def update_interface(interface, *conditions):
+        record = {
+            'admin_state': interface.admin_state,
+            'bfd': ['map', [[_, interface.bfd[_]] for _ in interface.bfd]],
+            'bfd_status': ['map', [[_, interface.bfd_status[_]] for _ in interface.bfd_status]],
+            'cfm_fault': ['set', [_ for _ in interface.cfm_fault]],
+            'cfm_fault_status': ['set', [_ for _ in interface.cfm_fault_status]],
+            'cfm_flap_count': ['set', [_ for _ in interface.cfm_flap_count]],
+            'cfm_health': ['set', [_ for _ in interface.cfm_health]],
+            'cfm_mpid': ['set', [_ for _ in interface.cfm_mpid]],
+            'cfm_remote_mpids': ['set', [_ for _ in interface.cfm_remote_mpids]],
+            'cfm_remote_opstate': ['set', [_ for _ in interface.cfm_remote_opstate]],
+            'duplex': ['set', [_ for _ in interface.duplex]],
+            'error': ['set', [_ for _ in interface.error]],
+            'external_ids': ['map', [
+                [_, interface.external_ids[_]] for _ in interface.external_ids
+            ]],
+            'ifindex': interface.ifindex,
+            'ingress_policing_burst': interface.ingress_policing_burst,
+            'ingress_policing_rate': interface.ingress_policing_rate,
+            'lacp_current': ['set', [_ for _ in interface.lacp_current]],
+            'link_resets': interface.link_resets,
+            'link_speed': ['set', [_ for _ in interface.link_speed]],
+            'link_state': interface.link_state,
+            'lldp': ['map', [[_, interface.lldp[_]] for _ in interface.lldp]],
+            'mac': ['set', [_ for _ in interface.mac]],
+            'mac_in_use': interface.mac_in_use,
+            'mtu': interface.mtu,
+            'mtu_request': ['set', [_ for _ in interface.mtu_request]],
+            'ofport': interface.ofport,
+            'ofport_request': ['set', [_ for _ in interface.ofport_request]],
+            'options': ['map', [[_, interface.options[_]] for _ in interface.options]],
+            'other_config': ['map', [
+                [_, interface.other_config[_]] for _ in interface.other_config
+            ]],
+            'statistics': ['map', [[_, interface.statistics[_]] for _ in interface.statistics]],
+            'status': ['map', [[_, interface.status[_]] for _ in interface.status]],
+            'type': interface.type
+        }
+        return super(InterfaceOperations, InterfaceOperations).update(
+            constants.OVSDBTables.interface.value, record, *conditions
+        )
+
+    @staticmethod
+    def update_interface_by_name(name, interface):
+        return InterfaceOperations.update_interface(interface, ['name', '==', str(name)])
+
+    @staticmethod
+    def update_interface_by_uuid(uuid, interface):
+        return InterfaceOperations.update_interface(interface, ['_uuid', '==', ['uuid', str(uuid)]])
