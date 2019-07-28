@@ -6,7 +6,7 @@ class Open_vSwitch(object):
     def __init__(
             self, bridges=list(), cur_cfg=0, datapath_types=list(), db_version='',
             dpdk_initialized=False, dpdk_version='', external_ids=dict(), iface_types=list(),
-            manager_options=list(), next_cfg=0, other_configs=dict(), ovs_version='', ssl=list(),
+            manager_options=list(), next_cfg=0, other_config=dict(), ovs_version='', ssl=list(),
             statistics=dict(), system_type='', system_version='', uuid=''
         ):
         self.bridges = list(bridges)
@@ -19,7 +19,7 @@ class Open_vSwitch(object):
         self.iface_types = list(iface_types)
         self.manager_options = list(manager_options)
         self.next_cfg = next_cfg
-        self.other_configs = dict(other_configs)
+        self.other_config = dict(other_config)
         self.ovs_version = ovs_version
         self.ssl = list(ssl)
         self.statistics = dict(statistics)
@@ -134,11 +134,11 @@ class Open_vSwitch(object):
         self.__next_cfg = int(value)
 
     @property
-    def other_configs(self):
+    def other_config(self):
         return self.__other_configs
 
-    @other_configs.setter
-    def other_configs(self, value):
+    @other_config.setter
+    def other_config(self, value):
         if (not isinstance(value, dict)):
             raise ValueError('other_configs can only be dict')
         self.__other_configs = dict(value)
@@ -215,7 +215,7 @@ class Open_vSwitch(object):
             'iface_types': list(self.iface_types),
             'manager_options': list(self.manager_options),
             'next_cfg': self.next_cfg,
-            'other_configs': self.other_configs,
+            'other_config': self.other_config,
             'ovs_version': self.ovs_version,
             'ssl': list(self.ssl),
             'statistics': self.statistics,
