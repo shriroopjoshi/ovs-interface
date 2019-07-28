@@ -9,7 +9,7 @@ class Open_vSwitchOperations(OVSOperations):
     @staticmethod
     def get():
         record = super(Open_vSwitchOperations, Open_vSwitchOperations).get(
-            constants.Operations.select.value, constants.OVSDBTables.open_vswitch.value, *([])
+            constants.OVSDBTables.open_vswitch.value, *([])
         )[0]
         return Open_vSwitch(
             bridges=[bridge for _, bridge in record['bridges'][1]],

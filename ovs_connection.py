@@ -1,6 +1,7 @@
 from __future__ import print_function
 
 import json
+import os
 import socket
 
 import constants
@@ -21,6 +22,8 @@ class OVSConnection():
         self.disconnect()
 
     def connect(self):
+        if not os.path.exists(OVSConnection.HOST):
+            raise RuntimeError('Socket %s not found' % OVSConnection.HOST)
         self.connection_sock.connect(OVSConnection.HOST)
 
     def send(self, payload):

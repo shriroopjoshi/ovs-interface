@@ -10,7 +10,7 @@ class InterfaceOperations(OVSOperations):
     def get_interfaces(*conditions):
         interfaces = list()
         response = super(InterfaceOperations, InterfaceOperations).get(
-            constants.Operations.select.value, constants.OVSDBTables.interface.value, *conditions
+            constants.OVSDBTables.interface.value, *conditions
         )
         for record in response:
             interfaces.append(Interface(

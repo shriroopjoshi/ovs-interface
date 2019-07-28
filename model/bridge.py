@@ -6,16 +6,16 @@ class Bridge(object):
 
     def __init__(
             self, name, auto_attach=list(), controller=list(), datapath_id='', datapath_type='',
-            datapath_version='..', external_ids=dict(), fail_mode=list(), flood_vlans=list(),
+            datapath_version='', external_ids=dict(), fail_mode=list(), flood_vlans=list(),
             ipfix=list(), mcast_snooping_enable=False, mirrors=list(), netflow=list(),
-            other_config=dict(), ports=list(), protocols=list(), rstp_enabled=False,
+            other_config=dict(), ports=list(), protocols=list(), rstp_enable=False,
             rstp_status=dict(), sflow=list(), status=dict(), stp_enable=True, uuid=''
         ):
         self.auto_attach = set(auto_attach)
         self.controller = set(controller)
         self.datapath_id = datapath_id
         self.datapath_type = datapath_type
-        self.datapath_version = tuple(datapath_version.split('.'))
+        self.datapath_version = datapath_version
         self.external_ids = dict(external_ids)
         self.fail_mode = set(fail_mode)
         self.flood_vlans = set(flood_vlans)
@@ -27,7 +27,7 @@ class Bridge(object):
         self.other_config = dict(other_config)
         self.ports = set(ports)
         self.protocols = set(protocols)
-        self.rstp_enabled = rstp_enabled
+        self.rstp_enable = rstp_enable
         self.rstp_status = dict(rstp_status)
         self.sflow = set(sflow)
         self.status = dict(status)
@@ -80,10 +80,9 @@ class Bridge(object):
 
     @datapath_version.setter
     def datapath_version(self, value):
-        if (not isinstance(value, (str, tuple))):
-            raise ValueError('datapath_verion can only be a string or tuple')
-        self.__datapath_version = tuple(value) if isinstance(value, tuple) \
-            else tuple(value.split('.'))
+        if (not isinstance(value, str)):
+            raise ValueError('datapath_verion can only be a string')
+        self.__datapath_version = str(value)
 
     @property
     def external_ids(self):
@@ -199,13 +198,13 @@ class Bridge(object):
         self.__protocols = set(value)
 
     @property
-    def rstp_enabled(self):
+    def rstp_enable(self):
         return self.__rstp_enabled
 
-    @rstp_enabled.setter
-    def rstp_enabled(self, value):
+    @rstp_enable.setter
+    def rstp_enable(self, value):
         if (not isinstance(value, bool)):
-            raise ValueError('rstp_enabled can only be a bool')
+            raise ValueError('rstp_enable can only be a bool')
         self.__rstp_enabled = value
 
     @property
@@ -264,7 +263,7 @@ class Bridge(object):
             'controller': list(self.controller),
             'datapath_id': self.datapath_id,
             'datapath_type': self.datapath_type,
-            'datapath_version': list(self.datapath_version),
+            'datapath_version': self.datapath_version,
             'external_ids': self.external_ids,
             'fail_mode': list(self.fail_mode),
             'flood_vlans': list(self.flood_vlans),
@@ -276,7 +275,7 @@ class Bridge(object):
             'other_config': self.other_config,
             'ports': [str(port) for port in self.ports],
             'protocols': list(self.protocols),
-            'rstp_enabled': self.rstp_enabled,
+            'rstp_enable': self.rstp_enable,
             'sflow': list(self.sflow),
             'status': self.status,
             'stp_enable': self.stp_enable,

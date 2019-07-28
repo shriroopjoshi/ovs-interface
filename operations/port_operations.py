@@ -10,7 +10,7 @@ class PortOperations(OVSOperations):
     def get_ports(*conditions):
         ports = list()
         response = super(PortOperations, PortOperations).get(
-            constants.Operations.select.value, constants.OVSDBTables.port.value, *conditions
+            constants.OVSDBTables.port.value, *conditions
         )
         for record in response:
             ports.append(Port(
