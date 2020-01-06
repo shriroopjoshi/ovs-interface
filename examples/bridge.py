@@ -1,6 +1,7 @@
 from operations.bridge_operations import BridgeOperations
 from operations.open_vswitch_operations import Open_vSwitchOperations
 
+
 def get_all_bridges():
     bridges = BridgeOperations.get_bridges()
     for bridge in bridges:
@@ -20,6 +21,7 @@ def get_bridges_by_uuid():
     for bridge_uuid in ovs.bridges:
         bridge = BridgeOperations.get_bridge_by_uuid(bridge_uuid)
         print('%s: %s' % (bridge.name, str(bridge)))
+
 
 def update_external_ids(name, key, value):
     bridge = BridgeOperations.get_bridge_by_name(name)

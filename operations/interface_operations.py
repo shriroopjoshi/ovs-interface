@@ -4,6 +4,7 @@ import constants
 from model.interface import Interface
 from operations.ovs_operations import OVSOperations
 
+
 class InterfaceOperations(OVSOperations):
 
     @staticmethod

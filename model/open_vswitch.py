@@ -1,31 +1,32 @@
 import json
-import uuid
+import uuid as _uuid
+
 
 class Open_vSwitch(object):
 
     def __init__(
-            self, bridges=list(), cur_cfg=0, datapath_types=list(), db_version='',
-            dpdk_initialized=False, dpdk_version='', external_ids=dict(), iface_types=list(),
-            manager_options=list(), next_cfg=0, other_config=dict(), ovs_version='', ssl=list(),
-            statistics=dict(), system_type='', system_version='', uuid=''
-        ):
-        self.bridges = list(bridges)
+        self, bridges=None, cur_cfg=0, datapath_types=None, db_version='',
+        dpdk_initialized=False, dpdk_version='', external_ids=None, iface_types=None,
+        manager_options=None, next_cfg=0, other_config=None, ovs_version='', ssl=None,
+        statistics=None, system_type='', system_version='', uuid=''
+    ):
+        self.bridges = set(bridges) if bridges else set()
         self.cur_cfg = cur_cfg
-        self.datapath_types = list(datapath_types)
+        self.datapath_types = set(datapath_types) if datapath_types else set()
         self.db_version = db_version
         self.dpdk_initialized = dpdk_initialized
         self.dpdk_version = dpdk_version
-        self.external_ids = dict(external_ids)
-        self.iface_types = list(iface_types)
-        self.manager_options = list(manager_options)
+        self.external_ids = dict(external_ids) if external_ids else dict()
+        self.iface_types = set(iface_types) if iface_types else set()
+        self.manager_options = set(manager_options) if manager_options else set()
         self.next_cfg = next_cfg
-        self.other_config = dict(other_config)
+        self.other_config = dict(other_config) if other_config else dict()
         self.ovs_version = ovs_version
-        self.ssl = list(ssl)
-        self.statistics = dict(statistics)
+        self.ssl = set(ssl) if ssl else set()
+        self.statistics = dict(statistics) if statistics else dict()
         self.system_type = system_type
         self.system_version = system_version
-        self.uuid = uuid
+        self.uuid = uuid if uuid else str(_uuid.uuid4())
 
     @property
     def bridges(self):
@@ -199,8 +200,8 @@ class Open_vSwitch(object):
 
     @uuid.setter
     def uuid(self, value):
-        if (not isinstance(value, (uuid.UUID, str))):
-            raise ValueError('uuid can only be str or uuid.UUID')
+        if (not isinstance(value, str)):
+            raise ValueError('uuid can only be str')
         self.__uuid = uuid.UUID(value)
 
     def __str__(self):

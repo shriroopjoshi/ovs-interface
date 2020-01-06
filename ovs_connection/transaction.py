@@ -8,6 +8,7 @@ from ovs_connection.connection import OVSConnection
 from ovs_exceptions.ovs_exceptions import OVSTransactionException
 from util import Singleton
 
+
 class TransactionLock(metaclass=Singleton):
 
     def __init__(self):
@@ -25,6 +26,7 @@ class TransactionLock(metaclass=Singleton):
     def counter(self):
         self.__counter += 1
         return self.__counter % constants.ALLOWED_CONCURRENT_TRANSACTIONS
+
 
 class Transaction(object):
 

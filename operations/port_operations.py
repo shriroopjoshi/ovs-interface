@@ -4,6 +4,7 @@ import constants
 from model.port import Port
 from operations.ovs_operations import OVSOperations
 
+
 class PortOperations(OVSOperations):
 
     @staticmethod
@@ -67,7 +68,9 @@ class PortOperations(OVSOperations):
             'other_config': ['map', [[_, port.other_config[_]] for _ in port.other_config]],
             'protected': port.protected,
             'qos': ['set', [_ for _ in port.qos]],
-            'rstp_statistics': ['map', [[_, port.rstp_statistics[_]] for _ in port.rstp_statistics]],
+            'rstp_statistics': ['map', [
+                [_, port.rstp_statistics[_]] for _ in port.rstp_statistics
+            ]],
             'statistics': ['map', [[_, port.statistics[_]] for _ in port.statistics]],
             'status': ['map', [[_, port.status[_]] for _ in port.status]],
             'tag': ['set', [_ for _ in port.tag]],

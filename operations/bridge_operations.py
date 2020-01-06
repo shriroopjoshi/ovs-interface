@@ -4,6 +4,7 @@ import constants
 from model.bridge import Bridge
 from operations.ovs_operations import OVSOperations
 
+
 class BridgeOperations(OVSOperations):
 
     @staticmethod
@@ -70,7 +71,7 @@ class BridgeOperations(OVSOperations):
             'rstp_enable': bridge.rstp_enable,
             'rstp_status': ['map', [[_, bridge.rstp_status[_]] for _ in bridge.rstp_status]],
             'sflow': ['set', [_ for _ in bridge.sflow]],
-            'status': ['map', [[_ , bridge.status[_]] for _ in bridge.status]],
+            'status': ['map', [[_, bridge.status[_]] for _ in bridge.status]],
             'stp_enable': bridge.stp_enable
         }
         return super(BridgeOperations, BridgeOperations).update(

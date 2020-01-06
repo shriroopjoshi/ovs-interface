@@ -1,38 +1,39 @@
 """ Bridge Model """
 import json
-import uuid
+import uuid as _uuid
+
 
 class Bridge(object):
 
     def __init__(
-            self, name, auto_attach=list(), controller=list(), datapath_id='', datapath_type='',
-            datapath_version='', external_ids=dict(), fail_mode=list(), flood_vlans=list(),
-            ipfix=list(), mcast_snooping_enable=False, mirrors=list(), netflow=list(),
-            other_config=dict(), ports=list(), protocols=list(), rstp_enable=False,
-            rstp_status=dict(), sflow=list(), status=dict(), stp_enable=True, uuid=''
-        ):
-        self.auto_attach = set(auto_attach)
-        self.controller = set(controller)
+        self, name, auto_attach=list(), controller=list(), datapath_id='', datapath_type='',
+        datapath_version='', external_ids=dict(), fail_mode=list(), flood_vlans=list(),
+        ipfix=list(), mcast_snooping_enable=False, mirrors=list(), netflow=list(),
+        other_config=dict(), ports=list(), protocols=list(), rstp_enable=False,
+        rstp_status=dict(), sflow=list(), status=dict(), stp_enable=True, uuid=''
+    ):
+        self.auto_attach = set(auto_attach) if auto_attach else set()
+        self.controller = set(controller) if controller else set()
         self.datapath_id = datapath_id
         self.datapath_type = datapath_type
         self.datapath_version = datapath_version
-        self.external_ids = dict(external_ids)
-        self.fail_mode = set(fail_mode)
-        self.flood_vlans = set(flood_vlans)
-        self.ipfix = set(ipfix)
+        self.external_ids = dict(external_ids) if external_ids else dict()
+        self.fail_mode = set(fail_mode) if fail_mode else set()
+        self.flood_vlans = set(flood_vlans) if flood_vlans else set()
+        self.ipfix = set(ipfix) if ipfix else set()
         self.mcast_snooping_enable = mcast_snooping_enable
-        self.mirrors = set(mirrors)
+        self.mirrors = set(mirrors) if mirrors else set()
         self.name = name
-        self.netflow = set(netflow)
-        self.other_config = dict(other_config)
-        self.ports = set(ports)
-        self.protocols = set(protocols)
+        self.netflow = set(netflow) if netflow else set()
+        self.other_config = dict(other_config) if other_config else dict()
+        self.ports = set(ports) if ports else set()
+        self.protocols = set(protocols) if protocols else set()
         self.rstp_enable = rstp_enable
-        self.rstp_status = dict(rstp_status)
-        self.sflow = set(sflow)
-        self.status = dict(status)
+        self.rstp_status = dict(rstp_status) if rstp_status else set()
+        self.sflow = set(sflow) if sflow else set()
+        self.status = dict(status) if status else set()
         self.stp_enable = stp_enable
-        self.uuid = uuid
+        self.uuid = uuid if uuid else str(_uuid.uuid4())
 
     @property
     def auto_attach(self):
@@ -190,7 +191,7 @@ class Bridge(object):
     @property
     def protocols(self):
         return self.__protocols
-    
+
     @protocols.setter
     def protocols(self, value):
         if (not isinstance(value, (list, set))):
@@ -253,8 +254,8 @@ class Bridge(object):
 
     @uuid.setter
     def uuid(self, value):
-        if (not isinstance(value, (uuid.UUID, str))):
-            raise ValueError('uuid can only be str or uuid.UUID')
+        if (not isinstance(value, str)):
+            raise ValueError('uuid can only be str')
         self.__uuid = uuid.UUID(value)
 
     def __str__(self):

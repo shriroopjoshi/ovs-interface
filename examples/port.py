@@ -1,6 +1,7 @@
 from operations.bridge_operations import BridgeOperations
 from operations.port_operations import PortOperations
 
+
 def get_all_ports():
     ports = PortOperations.get_ports()
     for port in ports:

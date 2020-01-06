@@ -4,6 +4,7 @@ import constants
 from ovs_connection.transaction import Transaction
 from ovs_exceptions.ovs_exceptions import OVSException
 
+
 class OVSOperations(object):
 
     @staticmethod

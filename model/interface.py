@@ -1,51 +1,52 @@
 import json
-import uuid
+import uuid as _uuid
+
 
 class Interface(object):
 
     def __init__(
-        self, name, admin_state='', bfd=dict(), bfd_status=dict(), cfm_fault=list(),
-        cfm_fault_status=list(), cfm_flap_count=list(), cfm_health=list(), cfm_mpid=list(),
-        cfm_remote_mpids=list(), cfm_remote_opstate=list(), duplex=list(), error=list(),
-        external_ids=dict(), ifindex=-1, ingress_policing_burst=0, ingress_policing_rate=0,
-        lacp_current=list(), link_resets=-1, link_speed=list(), link_state='', lldp=dict(),
-        mac=list(), mac_in_use='', mtu=0, mtu_request=list(), ofport=0, ofport_request=list(),
-        options=dict(), other_config=dict(), statistics=dict(), status=dict(), type='', uuid=''
+        self, name, admin_state='', bfd=None, bfd_status=None, cfm_fault=None,
+        cfm_fault_status=None, cfm_flap_count=None, cfm_health=None, cfm_mpid=None,
+        cfm_remote_mpids=None, cfm_remote_opstate=None, duplex=None, error=None, external_ids=None,
+        ifindex=-1, ingress_policing_burst=0, ingress_policing_rate=0, lacp_current=None,
+        link_resets=-1, link_speed=None, link_state='', lldp=None, mac=None, mac_in_use='', mtu=0,
+        mtu_request=None, ofport=0, ofport_request=None, options=None, other_config=None,
+        statistics=None, status=None, type='', uuid=''
     ):
         self.admin_state = admin_state
-        self.bfd = dict(bfd)
-        self.bfd_status = dict(bfd_status)
-        self.cfm_fault = set(cfm_fault)
-        self.cfm_fault_status = set(cfm_fault_status)
-        self.cfm_flap_count = set(cfm_flap_count)
-        self.cfm_health = set(cfm_health)
-        self.cfm_mpid = set(cfm_mpid)
-        self.cfm_remote_mpids = set(cfm_remote_mpids)
-        self.cfm_remote_opstate = set(cfm_remote_opstate)
-        self.duplex = set(duplex)
-        self.error = set(error)
-        self.external_ids = dict(external_ids)
+        self.bfd = dict(bfd) if bfd else dict()
+        self.bfd_status = dict(bfd_status) if bfd_status else dict()
+        self.cfm_fault = set(cfm_fault) if cfm_fault else set()
+        self.cfm_fault_status = set(cfm_fault_status) if cfm_fault_status else set()
+        self.cfm_flap_count = set(cfm_flap_count) if cfm_flap_count else set()
+        self.cfm_health = set(cfm_health) if cfm_health else set()
+        self.cfm_mpid = set(cfm_mpid) if cfm_mpid else set()
+        self.cfm_remote_mpids = set(cfm_remote_mpids) if cfm_remote_mpids else set()
+        self.cfm_remote_opstate = set(cfm_remote_opstate) if cfm_remote_opstate else set()
+        self.duplex = set(duplex) if duplex else set()
+        self.error = set(error) if error else set()
+        self.external_ids = dict(external_ids) if external_ids else dict()
         self.ifindex = ifindex
         self.ingress_policing_burst = ingress_policing_burst
         self.ingress_policing_rate = ingress_policing_rate
-        self.lacp_current = set(lacp_current)
+        self.lacp_current = set(lacp_current) if lacp_current else set()
         self.link_resets = link_resets
-        self.link_speed = set(link_speed)
+        self.link_speed = set(link_speed) if link_speed else set()
         self.link_state = link_state
-        self.lldp = dict(lldp)
-        self.mac = set(mac)
+        self.lldp = dict(lldp) if lldp else dict()
+        self.mac = set(mac) if mac else set()
         self.mac_in_use = mac_in_use
         self.mtu = mtu
-        self.mtu_request = set(mtu_request)
+        self.mtu_request = set(mtu_request) if mtu_request else set()
         self.name = name
         self.ofport = ofport
-        self.ofport_request = set(ofport_request)
-        self.options = dict(options)
-        self.other_config = dict(other_config)
-        self.statistics = dict(statistics)
-        self.status = dict(status)
+        self.ofport_request = set(ofport_request) if ofport_request else set()
+        self.options = dict(options) if options else dict()
+        self.other_config = dict(other_config) if other_config else dict()
+        self.statistics = dict(statistics) if statistics else dict()
+        self.status = dict(status) if status else dict()
         self.type = type
-        self.uuid = uuid
+        self.uuid = uuid if uuid else str(_uuid.uuid4())
 
     @property
     def admin_state(self):
@@ -383,8 +384,8 @@ class Interface(object):
 
     @uuid.setter
     def uuid(self, value):
-        if (not isinstance(value, (uuid.UUID, str))):
-            raise ValueError('uuid can only be str or uuid.UUID')
+        if (not isinstance(value, str)):
+            raise ValueError('uuid can only be str')
         self.__uuid = uuid.UUID(value)
 
     def __str__(self):

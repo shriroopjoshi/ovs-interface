@@ -5,6 +5,7 @@ import socket
 import constants
 from util import Singleton
 
+
 class OVSConnection(metaclass=Singleton):
 
     def __init__(self):
@@ -17,7 +18,7 @@ class OVSConnection(metaclass=Singleton):
     def __del__(self):
         try:
             self.connection_sock.close()
-        except:
+        except Exception:
             pass
 
     def send(self, payload):
@@ -35,6 +36,7 @@ class OVSConnection(metaclass=Singleton):
 
     def disconnect(self):
         self.connection_sock.close()
+
 
 def test():
     """

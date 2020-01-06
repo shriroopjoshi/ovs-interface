@@ -1,38 +1,39 @@
 import json
-import uuid
+import uuid as _uuid
+
 
 class Port(object):
 
     def __init__(
-            self, name, bond_active_slave=list(), bond_downdelay=0, bond_fake_iface=False,
-            bond_mode=list(), bond_updelay=0, cvlans=list(), external_ids=dict(),
-            fake_bridge=False, interfaces=list(), lacp=list(), mac=list(), other_config=dict(),
-            protected=False, qos=list(), rstp_statistics=dict(), rstp_status=dict(),
-            statistics=dict(), status=dict(), tag=list(), trunks=list(), vlan_mode=list(), uuid=''
-        ):
+        self, name, bond_active_slave=None, bond_downdelay=0, bond_fake_iface=False, bond_mode=None,
+        bond_updelay=0, cvlans=None, external_ids=None, fake_bridge=False, interfaces=None,
+        lacp=None, mac=None, other_config=None, protected=False, qos=None, rstp_statistics=None,
+        rstp_status=None, statistics=None, status=None, tag=None, trunks=None, vlan_mode=None,
+        uuid=''
+    ):
         self.name = name
-        self.bond_active_slave = set(bond_active_slave)
+        self.bond_active_slave = set(bond_active_slave) if bond_active_slave else set()
         self.bond_downdelay = bond_downdelay
         self.bond_fake_iface = bond_fake_iface
-        self.bond_mode = set(bond_mode)
+        self.bond_mode = set(bond_mode) if bond_mode else set()
         self.bond_updelay = bond_updelay
-        self.cvlans = set(cvlans)
-        self.external_ids = dict(external_ids)
+        self.cvlans = set(cvlans) if cvlans else set()
+        self.external_ids = dict(external_ids) if external_ids else dict()
         self.fake_bridge = fake_bridge
-        self.interfaces = set(interfaces)
-        self.lacp = set(lacp)
-        self.mac = set(mac)
-        self.other_config = dict(other_config)
+        self.interfaces = set(interfaces) if interfaces else set()
+        self.lacp = set(lacp) if lacp else set()
+        self.mac = set(mac) if mac else set()
+        self.other_config = dict(other_config) if other_config else dict()
         self.protected = protected
-        self.qos = set(qos)
-        self.rstp_statistics = dict(rstp_statistics)
-        self.rstp_status = dict(rstp_status)
-        self.statistics = dict(statistics)
-        self.status = dict(status)
-        self.tag = set(tag)
-        self.trunks = set(trunks)
-        self.vlan_mode = set(vlan_mode)
-        self.uuid = uuid
+        self.qos = set(qos) if qos else set()
+        self.rstp_statistics = dict(rstp_statistics) if rstp_statistics else dict()
+        self.rstp_status = dict(rstp_status) if rstp_status else dict()
+        self.statistics = dict(statistics) if statistics else dict()
+        self.status = dict(status) if status else dict()
+        self.tag = set(tag) if tag else set()
+        self.trunks = set(trunks) if trunks else set()
+        self.vlan_mode = set(vlan_mode) if vlan_mode else set()
+        self.uuid = uuid if uuid else str(_uuid.uuid4())
 
     @property
     def bond_active_slave(self):
@@ -263,9 +264,9 @@ class Port(object):
 
     @uuid.setter
     def uuid(self, value):
-        if (not isinstance(value, (uuid.UUID, str))):
-            raise ValueError('uuid can only be str or uuid.UUID')
-        self.__uuid = uuid.UUID(value)
+        if (not isinstance(value, str)):
+            raise ValueError('uuid can only be str')
+        self.__uuid = _uuid.UUID(value)
 
     def __str__(self):
         return json.dumps({

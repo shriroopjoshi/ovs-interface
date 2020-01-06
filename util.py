@@ -1,5 +1,6 @@
 import threading
 
+
 class Singleton(type):
     __instances = dict()
     __lock = threading.Lock()

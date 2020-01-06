@@ -1,6 +1,7 @@
 from operations.interface_operations import InterfaceOperations
 from operations.port_operations import PortOperations
 
+
 def get_all_interfaces():
     interfaces = InterfaceOperations.get_interfaces()
     for interface in interfaces:
@@ -32,13 +33,13 @@ def update_external_ids(name, key, value):
         return
 
     interface.external_ids[key] = value
-    print('Rows updated = %s' % \
-        InterfaceOperations.update_interface_by_name(interface.name, interface))
-    
+    print('Rows updated = %s' %
+          InterfaceOperations.update_interface_by_name(interface.name, interface))
+
     interface = InterfaceOperations.get_interface_by_name(name)
     interface.external_ids.pop(key)
-    print('Rows updated = %s' % \
-        InterfaceOperations.update_interface_by_uuid(interface.uuid, interface))
+    print('Rows updated = %s' %
+          InterfaceOperations.update_interface_by_uuid(interface.uuid, interface))
 
     interface = InterfaceOperations.get_interface_by_name(name)
     assert key not in interface.external_ids
