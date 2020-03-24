@@ -1,3 +1,4 @@
+import collections
 import json
 
 import constants
@@ -47,3 +48,41 @@ class OVSOperations(object):
         if 'error' in response:
             raise OVSException('%s: %s' % (response['error'].strip(), response['details'].strip()))
         return response['count']
+
+    @staticmethod
+    def create(table, record):
+        request = {
+            'op': constants.Operations.insert.value,
+            'table': table,
+            'row': record
+        }
+        response = None
+        print('REQUEST: %s' % request)
+        with Transaction() as handle:
+            handle.add_request_payload(request)
+            handle.apply()
+            response = handle.response[0]
+        print('RESPONSE: %s' % response)
+        if not response:
+            raise OVSException('No response')
+        if 'error' in response:
+            raise OVSException('%s: %s' % (response['error'].strip(), response['details'].strip()))
+        return response['uuid']
+
+    @staticmethod
+    def mutate(table, conditions, mutations):
+        request = {
+            'op': constants.Operations.mutate.value,
+            'table': table,
+            'where': conditions,
+            'mutations': mutations
+        }
+        response = None
+        print('REQUEST: %s' % request)
+        with Transaction() as handle:
+            handle.add_request_payload(request)
+            handle.apply()
+            response = handle.response[0]
+        print('RESPONSE: %s' % response)
+        if not response:
+            raise OVSException('No response')

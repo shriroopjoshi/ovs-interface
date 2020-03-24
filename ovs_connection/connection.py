@@ -32,7 +32,7 @@ class OVSConnection(metaclass=Singleton):
             response += part_response
             if len(part_response) < constants.OVSDB_CONNECTION_BUFFER_SIZE:
                 break
-        return response
+        return response.decode('utf-8')
 
     def disconnect(self):
         self.connection_sock.close()

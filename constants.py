@@ -29,3 +29,4 @@ class Operations(enum.Enum):
     select = 'select'
     update = 'update'
     delete = 'delete'
+    mutate = 'mutate'

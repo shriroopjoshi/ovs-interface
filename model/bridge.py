@@ -29,9 +29,9 @@ class Bridge(object):
         self.ports = set(ports) if ports else set()
         self.protocols = set(protocols) if protocols else set()
         self.rstp_enable = rstp_enable
-        self.rstp_status = dict(rstp_status) if rstp_status else set()
+        self.rstp_status = dict(rstp_status) if rstp_status else dict()
         self.sflow = set(sflow) if sflow else set()
-        self.status = dict(status) if status else set()
+        self.status = dict(status) if status else dict()
         self.stp_enable = stp_enable
         self.uuid = uuid if uuid else str(_uuid.uuid4())
 
@@ -184,9 +184,9 @@ class Bridge(object):
         if (not isinstance(value, (list, set))):
             raise ValueError('ports can only be a list or a set')
         for val in value:
-            if (not isinstance(val, (str, uuid.UUID))):
+            if (not isinstance(val, (str, _uuid.UUID))):
                 raise ValueError('port need to a instances of str')
-        self.__ports = set([uuid.UUID(str(val)) for val in value])
+        self.__ports = set([_uuid.UUID(str(val)) for val in value])
 
     @property
     def protocols(self):
@@ -256,7 +256,7 @@ class Bridge(object):
     def uuid(self, value):
         if (not isinstance(value, str)):
             raise ValueError('uuid can only be str')
-        self.__uuid = uuid.UUID(value)
+        self.__uuid = _uuid.UUID(value)
 
     def __str__(self):
         return json.dumps({

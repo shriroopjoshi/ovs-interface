@@ -85,3 +85,37 @@ class BridgeOperations(OVSOperations):
     @staticmethod
     def update_bridge_by_uuid(uuid, bridge):
         return BridgeOperations.update_bridge(bridge, ['_uuid', '==', ['uuid', str(uuid)]])
+
+    @staticmethod
+    def create_bridge(bridge):
+        record = {
+            'auto_attach': ['set', [_ for _ in bridge.auto_attach]],
+            'controller': ['set', [_ for _ in bridge.controller]],
+            'datapath_id': bridge.datapath_id,
+            'datapath_type': bridge.datapath_type,
+            'datapath_version': bridge.datapath_version,
+            'external_ids': ['map', [[_, bridge.external_ids[_]] for _ in bridge.external_ids]],
+            'fail_mode': ['set', [_ for _ in bridge.fail_mode]],
+            'flood_vlans': ['set', [_ for _ in bridge.flood_vlans]],
+            'mcast_snooping_enable': bridge.mcast_snooping_enable,
+            'mirrors': ['set', [_ for _ in bridge.mirrors]],
+            'netflow': ['set', [_ for _ in bridge.netflow]],
+            'other_config': ['map', [[_, bridge.other_config[_]] for _ in bridge.other_config]],
+            'ports': ['set', [['uuid', str(_)] for _ in bridge.ports]],
+            'protocols': ['set', [_ for _ in bridge.protocols]],
+            'rstp_enable': bridge.rstp_enable,
+            'rstp_status': ['map', [[_, bridge.rstp_status[_]] for _ in bridge.rstp_status]],
+            'sflow': ['set', [_ for _ in bridge.sflow]],
+            'status': ['map', [[_, bridge.status[_]] for _ in bridge.status]],
+            'stp_enable': bridge.stp_enable,
+            '_uuid': ['uuid', str(bridge.uuid)]
+        }
+        response = super(BridgeOperations, BridgeOperations).create(
+            constants.OVSDBTables.bridge.value, record
+        )
+        bridge.uuid = response[1]
+        response = super(BridgeOperations, BridgeOperations).mutate(
+            constants.OVSDBTables.open_vswitch.value,
+            [], [['bridges', 'insert', ['set', [['uuid', str(bridge.uuid)]]]]]
+        )
+        return response['count']
