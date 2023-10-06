@@ -3,7 +3,7 @@ import enum
 OVSDB_NAME = 'Open_vSwitch'
 
 # connection constants
-OVSDB_SOCKET = '/usr/local/var/run/openvswitch/db.sock'
+OVSDB_SOCKET = '/var/run/openvswitch/db.sock'
 OVSDB_CONNECTION_BUFFER_SIZE = 4096
 OVSDB_CONNECTION_TIMEOUT = 2  # secs
 
